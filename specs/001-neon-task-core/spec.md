@@ -160,11 +160,11 @@ Como usuário, quero configurar: fundo (sólido/imagem local/aleatório com opac
 
 ### Edge Cases
 
-- O que acontece se o Supabase estiver inacessível? Mostrar banner offline neon e permitir ações pendentes offline? — **NEEDS CLARIFICATION** (offline-first ou apenas erro inline?).
-- O que acontece quando o usuário tenta completar missão que já foi concluída (double-click/race)? Recompensa é aplicada uma única vez (idempotente).
-- O que acontece se o timer de focus ultrapassar 24h ou a aba for fechada em foreground? Tempo deve persistir (heartbeat/acc) — reabrir focus retoma do acumulado.
-- E se o usuário editar/deletar um projeto com missões ativas? Missões devem ser removidas ou impedir (regra a definir).
-- Drag-and-drop para coluna CONCLUÍDAS deve ou não conceder recompensa? — **NEEDS CLARIFICATION**.
+- Supabase inacessível ou offline: app entra offline-first — mutações são enfileiradas localmente (Zustand persist) e sincronizadas ao voltar; leitura usa cache local; banner neon indica estado offline/pendente de sync.
+- Tentativa de concluir missão já concluída (double-click/race): recompensa é idempotente, aplicada uma única vez.
+- Focus ultrapassando 24h ou aba fechada: tempo acumulado persiste via heartbeat; reabrir focus retoma do acumulado.
+- Excluir projeto com missões em aberto: projeto é **arquivado** (status `arquivado`), não deletado; missões permanecem. Arquivados escondidos da lista padrão.
+- Drag-and-drop para "Concluídas" no Kanban **concede** recompensa — toda transição para concluída é processada pela central de recompensas idempotente.
 
 ## Requirements *(mandatory)*
 
@@ -174,11 +174,12 @@ Como usuário, quero configurar: fundo (sólido/imagem local/aleatório com opac
 - **FR-002**: Sistema MUST exigir sessão válida para exibir qualquer dado/tela; ROTAS não autenticadas redirecionam ao login.
 - **FR-003**: Sistema MUST escopar 100% dos dados por `user_id` no banco (RLS ativa em todas as tabelas).
 - **FR-004**: Sistema MUST centralizar regras de gamificação (XP, eddies, nível, conquistas) em um único módulo de recompensas; nenhuma tela calcula recompensa própria.
-- **FR-005**: Sistema MUST conceder XP/eddies ao concluir missão conforme prioridade/dificuldade, com feedback visual (toast + aproject de stats) e sonoro.
+- **FR-005**: Sistema MUST conceder XP/eddies ao concluir missão conforme fórmula fixa: `xp = 20 × dificuldade × fator_prioridade` (prioridade alta ×1.5, média ×1.2, baixa ×1.0) e `eddies = 10 × dificuldade`, com feedback visual (toast + delta de stats) e sonoro.
+- **FR-005a**: TODA transição de missão para o estado concluída (botão, terminal, focus mode ou drag-and-drop no Kanban) MUST passar pela mesma central de recompensas idempotente.
 - **FR-006**: Sistema MUST registrar eventos de gamificação (ganho de XP, conquista desbloqueada) para o feed/history.
 - **FR-007**: Sistema MUST expor as 9 telas com navegação lateral fixa: Dashboard, Projetos, Missões, Kanban, Focus Mode, Conquistas, Álbum, Terminal, Configurações.
 - **FR-008**: Estilo visual (paleta via `@theme`, fontes Orbitron/Share Tech Mono, scanlines/glitch, barras de progresso) é não-negociável conforme constituição.
-- **FR-009**: Sistema MUST suportar CRUD completo de projetos e missões (com posições, prioridade, prazo, tags, checklst até 8 sub-itens).
+- **FR-009**: Sistema MUST suportar CRUD completo de projetos e missões (com posições, prioridade, prazo, tags, checklst até 8 sub-itens) e **arquivar** projetos (status `arquivado`) — nunca delete físico de projeto com missões.
 - **FR-010**: Timer de focus MUST persistir o tempo acumulado periodicamente (para não perder tempo ao fechar a aba).
 - **FR-011**: Conclusão de missão MUST ser idempotente (não concede recompensa dupla).
 - **FR-012**: Terminal MUST executar comandos contra os dados reais (mesma camada de repositório, sem acesso direto ao Supabase).

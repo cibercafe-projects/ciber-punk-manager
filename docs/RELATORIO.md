@@ -15,6 +15,19 @@ Data: 2026-09-20 · Doc: docs/RELATORIO.md
 - Pendências marcadas na spec (NEEDS CLARIFICATION): comportamento offline do Supabase; se drag-and-drop para "Concluídas" no Kanban concede recompensa; efeito de deletar projeto com missões.
 - Próximo: `/speckit.clarify` para resolver as ambiguidades acima → `/speckit.plan` (schema SQL).
 
+## 7. Sessão 2026-09-20 (cont.) — Clarify + Plan
+
+- **Clarify** (4 decisões do usuário):
+  1. **Offline-first**: mutações enfileiradas localmente, sync ao voltar, banner pendentes.
+  2. **Kanban**: drag para Concluídas TAMBÉM concede recompensa (mesma central idempotente).
+  3. **Projeto com missões em aberto**: arquivar (sem delete físico), escondido da lista padrão.
+  4. **Recompensa fórmula fixa**: XP = 20×dificuldade×fator_prioridade (1.5/1.2/1.0); eddies = 10×dificuldade.
+- **Spec atualizada** (edge cases + FR-005/005a/FR-009).
+- **Plan criado** (`specs/001-neon-task-core/plan.md`): arquitetura — `src/lib/db/*` única fronteira de dados, `src/lib/rewards.ts` central de gamificação, `src/lib/offline.ts` fila offline, stores Zustand, 10 páginas em `src/pages/`.
+- **Data model** (`data-model.md`): SQL completo — profiles/projects/missions/achievements/user_achievements/events + RLS por user_id + trigger de perfil + idempotência via `completed_at`.
+- **Quickstart** (`quickstart.md`): setup Supabase VPS, `.env`, deploy no VPS, checklist de verificação.
+- Pendentes: definir lista final de conquistas/artwork; gerar `/speckit.tasks` e implementar.
+
 ## 1. Decisões de Stack
 
 | Camada     | Escolha                                          | Motivo                                     |
