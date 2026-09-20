@@ -1,6 +1,19 @@
 # Relatório de Progresso — NEON//TASK SYSTEM
 
-Data: 2026-09-17 · Doc: docs/RELATORIO.md
+Data: 2026-09-20 · Doc: docs/RELATORIO.md
+
+## 6. Sessão 2026-09-20 — Spec base criada
+
+- Commit inicial entregue: `599fb74` (branch `main`).
+- `/speckit.specify` executado via script `.specify/scripts/powershell/create-new-feature.ps1 "neon-task-core"`:
+  - Branch `001-neon-task-core` criado; `specs/001-neon-task-core/spec.md` preenchida.
+- Decisões ratificadas com o usuário:
+  1. **Escopo**: spec única com as 9 telas (implementação incremental por stories P1→P3).
+  2. **Gamificação**: conforme mockup — XP/eddies por prioridade+dificuldade da missão, conquistas derivadas de eventos/stats, tudo centralizado num módulo de recompensas (Regra FR-004).
+  3. **Uso**: single-user (sem convites), mas schema já multi-usuário com RLS.
+  4. **Backgrounds**: imagem local do usuário com opacidade ajustável (fallback sólido neon).
+- Pendências marcadas na spec (NEEDS CLARIFICATION): comportamento offline do Supabase; se drag-and-drop para "Concluídas" no Kanban concede recompensa; efeito de deletar projeto com missões.
+- Próximo: `/speckit.clarify` para resolver as ambiguidades acima → `/speckit.plan` (schema SQL).
 
 ## 1. Decisões de Stack
 
