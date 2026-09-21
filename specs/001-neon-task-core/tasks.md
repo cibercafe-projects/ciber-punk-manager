@@ -6,14 +6,14 @@ Checklist implementável, ordem P1 → P3. Gate por fase: `npm run build` + `npm
 
 - [ ] 1.1 SQL: substituir seed se necessário; rodar `supabase/migrations/002_achievements_seed.sql` no SQL Editor (service key/sql editor, não anon).
 - [ ] 1.2 `src/index.css` tema completo `@theme` + scanlines/glitch utilities
-- [ ] 1.3 Componentes base: `NeonPanel`, `NeonButton`, `ProgressBar`, `StatCard`, `GlitchText`, `Toast` (feedback visual)
-- [ ] 1.4 `src/lib/audio.ts` (Howler): volumes on/off, sons sfx placeholder
-- [ ] 1.5 Stores Zustand: `session`, `ui` (config), `offlineQueue`
-- [ ] 1.6 `src/lib/db/*` repositórios (profile/projects/missions/achievements/events) sobre supabase-js
-- [ ] 1.7 `src/lib/offline.ts`: fila persistida + sync on reconnect + banner
-- [ ] 1.8 `src/lib/rewards.ts`: fórmula xp/eddies, nível (120×), avaliação de conquistas, feedback
-- [ ] 1.9 Auth: página `Login.tsx` + guard de rotas + sessão persistente (1a)
-- [ ] 1.10 Layout: sidebar com 9 rotas + header usuário/nível (eddie/xp) — navegação funcional com placeholders
+- [x] 1.3 Componentes base: `NeonPanel`, `NeonButton`, `ProgressBar`, `StatCard`, `GlitchText`, `Toast` (feedback visual)
+- [x] 1.4 `src/lib/audio.ts` (Howler): volumes on/off, sfx placeholder (arquivos do usuário depois, on/off funcional)
+- [x] 1.5 Stores Zustand: `session`, `ui` (config), `offlineQueue`
+- [x] 1.6 `src/lib/db/*` repositórios sobre supabase-js — implementado como `src/lib/db.ts` único (single-user, YAGNI)
+- [x] 1.7 `src/lib/offline.ts`: fila persistida + sync on reconnect + banner no header
+- [x] 1.8 `src/lib/rewards.ts`: fórmula xp/eddies, nível (120×), avaliação de conquistas, feedback
+- [x] 1.9 Auth: página `Login.tsx` + guard de rotas + sessão persistente (react-router-dom)
+- [x] 1.10 Layout: sidebar com 9 rotas + header usuário/nível (eddie/xp) — navegação funcional com placeholders
 
 ## Fase 2 — Núcleo (P1, Session 2)
 

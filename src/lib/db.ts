@@ -79,25 +79,21 @@ export async function upsertMission(m: Partial<Mission>): Promise<Mission | null
 
 // Conclusão idempotente (FR-005a/FR-011): única porta de concessão de recompensa
 export async function completeMission(mission: Mission) {
-  if (!mission.completed_at) {
-    const { xp, eddies } = missionReward(mission.priority, mission.difficulty)
-    const done = await tryRemote('missions', {
-      id: mission.id,
-      status: 'concluida' as const,
-      completed_at: new Date().toISOString(),
-    })
-    if (!done) {
-      await supabase.from('events').insert({
-        type: 'mission_completed',
-        payload: { mission_id: mission.id, code: mission.code, xp, eddies },
-      })
-      await grantProfileGain(xp, eddies)
-      const unlocked = await checkAchievements()
-      return { xp, eddies, unlocked }
-    }
-    return null
-  }
-  return null
+  if (mission.completed_at) return null
+  const { xp, eddies } = missionReward(mission.priority, mission.difficulty)
+  const ok = await tryRemote('missions', {
+    id: mission.id,
+    status: 'concluida' as const,
+    completed_at: new Date().toISOString(),
+  })
+  if (!ok) return null // enfileirado offline; recompensa avaliada online depois
+  await supabase.from('events').insert({
+    type: 'mission_completed',
+    payload: { mission_id: mission.id, code: mission.code, xp, eddies },
+  })
+  await grantProfileGain(xp, eddies)
+  const unlocked = await checkAchievements()
+  return { xp, eddies, unlocked }
 }
 
 async function grantProfileGain(xp: number, eddies: number) {
