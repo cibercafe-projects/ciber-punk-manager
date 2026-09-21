@@ -24,10 +24,10 @@ Checklist implementável, ordem P1 → P3. Gate por fase: `npm run build` + `npm
 
 ## Fase 3 — Operacional (P2, Session 3)
 
-- [ ] 3.1 `Kanban.tsx`: 3 colunas, drag-and-drop (Framer), + NOVA TAREFA, drag→concluída passa pela rewards (5)
-- [ ] 3.2 `FocusMode.tsx`: timer, heartbeat persistindo focus_seconds, PAUSAR/CONCLUIR/ABORTAR (6)
-- [ ] 3.3 `Achievements.tsx`: grid com critérios/progresso + filtros (7)
-- [ ] 3.4 `Album.tsx`: cartas colecionáveis, bloqueadas com ???, contador coletadas/eddies gastos (7)
+- [x] 3.1 `Kanban.tsx`: 3 colunas, drag-and-drop (Framer), + NOVA TAREFA, drag→concluída passa pela rewards (5)
+- [x] 3.2 `FocusMode.tsx`: timer, heartbeat persistindo focus_seconds, PAUSAR/CONCLUIR/ABORTAR (6)
+- [x] 3.3 `Achievements.tsx`: grid com critérios/progresso + filtros (7)
+- [x] 3.4 `Album.tsx`: cartas colecionáveis, bloqueadas com ???, contador coletadas (7)
 
 ## Fase 4 — Extras (P3, Session 4)
 

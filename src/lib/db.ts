@@ -110,6 +110,16 @@ async function grantProfileGain(xp: number, eddies: number) {
 }
 
 // ---------- achievements ----------
+export async function listAchievements(): Promise<Achievement[]> {
+  const { data } = await supabase.from('achievements').select('*')
+  return (data ?? []) as Achievement[]
+}
+
+export async function listUserAchievements(): Promise<UserAchievement[]> {
+  const { data } = await supabase.from('user_achievements').select('*')
+  return (data ?? []) as UserAchievement[]
+}
+
 function milestones(
   missions: Mission[],
   projects: Project[],
