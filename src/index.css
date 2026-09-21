@@ -3,10 +3,13 @@
 @theme {
   --color-neon-bg: #050510;
   --color-neon-surface: #0d0d1f;
+  --color-neon-surface2: #14142b;
   --color-neon-cyan: #00f0ff;
   --color-neon-magenta: #ff2d95;
   --color-neon-yellow: #f5d02f;
   --color-neon-green: #0aff6c;
+  --color-neon-red: #ff3b3b;
+  --color-neon-dim: #5a5a80;
 
   --font-mono: 'Share Tech Mono', ui-monospace, Consolas, monospace;
   --font-display: 'Orbitron', system-ui, sans-serif;
@@ -18,4 +21,69 @@ body {
   color: #e5e9f0;
   min-height: 100svh;
   font-family: var(--font-mono);
+}
+
+::selection {
+  background: var(--color-neon-cyan);
+  color: var(--color-neon-bg);
+}
+
+@utility neon-border {
+  border: 1px solid color-mix(in srgb, var(--color-neon-cyan) 45%, transparent);
+  box-shadow:
+    0 0 12px color-mix(in srgb, var(--color-neon-cyan) 18%, transparent),
+    inset 0 0 18px color-mix(in srgb, var(--color-neon-cyan) 6%, transparent);
+}
+
+@utility neon-border-magenta {
+  border: 1px solid color-mix(in srgb, var(--color-neon-magenta) 45%, transparent);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--color-neon-magenta) 18%, transparent);
+}
+
+@utility neon-text-cyan {
+  color: var(--color-neon-cyan);
+  text-shadow: 0 0 10px rgba(0, 240, 255, 0.55);
+}
+
+@utility neon-text-magenta {
+  color: var(--color-neon-magenta);
+  text-shadow: 0 0 10px rgba(255, 45, 149, 0.55);
+}
+
+@utility scanlines {
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: repeating-linear-gradient(
+      to bottom,
+      transparent 0px,
+      transparent 2px,
+      rgba(0, 0, 0, 0.18) 3px,
+      rgba(0, 0, 0, 0.18) 4px
+    );
+  }
+}
+
+@keyframes glitch-anim {
+  0% { transform: translate(0); opacity: 0.9; }
+  20% { transform: translate(-3px, 2px); }
+  40% { transform: translate(3px, -2px); }
+  60% { transform: translate(-2px, -1px); }
+  80% { transform: translate(2px, 1px); }
+  100% { transform: translate(0); }
+}
+
+@keyframes flicker {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.85; }
+  92% { opacity: 0.96; }
+}
+
+@keyframes scan {
+  from { transform: translateY(-100%); }
+  to { transform: translateY(100%); }
 }

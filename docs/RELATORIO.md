@@ -28,6 +28,21 @@ Data: 2026-09-20 · Doc: docs/RELATORIO.md
 - **Quickstart** (`quickstart.md`): setup Supabase VPS, `.env`, deploy no VPS, checklist de verificação.
 - Pendentes: definir lista final de conquistas/artwork; gerar `/speckit.tasks` e implementar.
 
+## 8. Sessão 2026-09-20 (cont.) — Conexão real + fase 1 iniciada
+
+- **Supabase conectado**: `.env` preenchido pelo usuário com credenciais reais; tabelas do data-model aplicadas no VPS (`achievements` acessável por anon key). Verificado com `scripts/test-db.cjs`.
+- **Seed vazio**: gerado `supabase/migrations/002_achievements_seed.sql` (8 conquistas: night_runner, street_samurai, corpo_breaker, foco_extremo, eficiencia, lendario, morador_bloco, legend_corpo) — **PENDENTE: rodar no SQL Editor do Supabase** (anon key não pode inserir).
+- **`/speckit.tasks` criado**: `specs/001-neon-task-core/tasks.md` — 4 fases (fundação, núcleo, operacional, extras).
+- **Fase 1 parcialmente implementada** (commit desta sessão):
+  - `src/index.css` — tema completo (32 vars `@theme`: cores, surface2, red, dim) + utilities `neon-border`, `neon-text-*`, `scanlines` + keyframes glitch/flicker/scan.
+  - `src/types.ts` — tipos do domínio (Profile, Project, Mission, Achievement, UserAchievement, ChecklistItem).
+  - `src/lib/rewards.ts` — central de gamificação: fórmula FR-005, nível (120 XP), progresso de conquistas, cores de raridade.
+  - `src/lib/db.ts` — repositório único: profiles/projects/missions (upsert com stash offline), `completeMission` idempotente guard por `completed_at`, `grantProfileGain`, `checkAchievements` (upsert progresso + unlock + eventos), `addFocusSeconds`, `syncQueue`.
+  - `src/stores/offline.ts` — fila de mutações persistida (Zustand persist) com flush idempotente.
+  - Gate `npm run build` + `npm run lint` passando.
+- **Amanhã (retomar em tasks.md)**: continuar 1.2–1.10 — componentes base (`NeonPanel`, `NeonButton`, `ProgressBar`, `StatCard`, `Toast`), `lib/audio.ts`, stores session/ui, página Login + rotas + sidebar.
+- Antes de codar: rodar o seed 002 no SQL Editor.
+
 ## 1. Decisões de Stack
 
 | Camada     | Escolha                                          | Motivo                                     |
