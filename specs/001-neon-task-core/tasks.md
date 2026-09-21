@@ -17,10 +17,10 @@ Checklist implementável, ordem P1 → P3. Gate por fase: `npm run build` + `npm
 
 ## Fase 2 — Núcleo (P1, Session 2)
 
-- [ ] 2.1 `Projects.tsx`: CRUD + filtro + progresso + painel detalhes + arquivar (1b/3)
-- [ ] 2.2 `Missions.tsx`: CRUD (prioridade, dificuldade, prazo, tags, checklist 8 itens) (4)
-- [ ] 2.3 `rewards` integrado: concluir missão → xp/eddies → evento + toast + som; idempotente (FR-005/005a/011)
-- [ ] 2.4 `Dashboard.tsx`: stats, gráfico produtividade, próxima missão + INICIAR MISSÃO (2)
+- [x] 2.1 `Projects.tsx`: CRUD + filtro + progresso + painel detalhes + arquivar (1b/3)
+- [x] 2.2 `Missions.tsx`: CRUD (prioridade, dificuldade, prazo, tags, checklist 8 itens) (4)
+- [x] 2.3 `rewards` integrado: concluir missão → xp/eddies → evento + toast + som; idempotente (FR-005/005a/011)
+- [x] 2.4 `Dashboard.tsx`: stats, gráfico produtividade, próxima missão + INICIAR MISSÃO (2)
 
 ## Fase 3 — Operacional (P2, Session 3)
 
