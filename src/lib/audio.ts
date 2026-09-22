@@ -1,13 +1,13 @@
 import { Howl, Howler } from 'howler'
 import { useUi } from '../stores/ui'
 
-// Sons do usuário serão adicionados depois em src/assets/sfx/.
-// Cada token aponta para um arquivo; se ausente, o Howler falha em silêncio (no-op).
+// Sons do usuário em public/sfx/ (.ogg) — mapeados por token;
+// se um arquivo estiver ausente, o Howler falha em silêncio (no-op).
 const SFX_FILES: Record<string, string[]> = {
-  click: ['/sfx/click.wav', '/sfx/click.mp3'],
-  reward: ['/sfx/reward.wav', '/sfx/reward.mp3'],
-  unlock: ['/sfx/unlock.wav', '/sfx/unlock.mp3'],
-  error: ['/sfx/error.wav', '/sfx/error.mp3'],
+  click: ['/sfx/game.ogg', '/sfx/electronic (2).ogg'],
+  reward: ['/sfx/money.ogg'],
+  unlock: ['/sfx/level-up1.ogg'],
+  error: ['/sfx/death.ogg'],
 }
 
 const cache = new Map<string, Howl | null>()
