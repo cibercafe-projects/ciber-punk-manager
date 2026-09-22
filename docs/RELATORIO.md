@@ -1,6 +1,36 @@
 # Relatório de Progresso — NEON//TASK SYSTEM
 
-Data: 2026-09-20 · Doc: docs/RELATORIO.md
+Data: 2026-09-21 · Doc: docs/RELATORIO.md
+
+## 9. Sessão 2026-09-21 — Fases 1–4 concluídas (app completo)
+
+Implementação integral do `tasks.md` em 4 commits (branch `001-neon-task-core`):
+
+- **`5cd0a57` Fase 1 (UI shell)**:
+  - Componentes base em `src/components/`: `NeonPanel`, `NeonButton`, `Progress`, `StatCard`, `GlitchText`, `Toast` (provider + `useToast`).
+  - `src/lib/audio.ts` — Howler com on/off + volume via store `ui`; sfx aponta para `/sfx/*` (silêncio até os arquivos do usuário).
+  - `src/stores/session.ts` (auth/profile) e `ui.ts` (config persistída, incl. backdrop/volume).
+  - `src/lib/offline.ts` — sync ao reconectar + banner `OFFLINE // N OPS` no header.
+  - `src/pages/Login.tsx` (entrar/criar conta) + guard de rotas + sessão persistente (react-router-dom instalado); 9 rotas com sidebar + header lv/XP/eddies.
+  - **Bug corrigido**: inversão de lógica em `completeMission` (concedia recompensa quando falhava).
+- **`86894e2` Fase 2 (núcleo)**:
+  - `src/stores/data.ts` — cache compartilhado projects/missions.
+  - Projects CRUD + filtro ativo/arquivado/concluído + arquivar/reativar + progresso por missões.
+  - Missions CRUD completo (prioridade, dificuldade 1–5 com recompensa prevista, prazo, tags, checklist ≤8 clicável, iniciar).
+  - Recompensas integradas: XP/₡ + toast + sfx reward/unlock + conquistas em cascata.
+  - Dashboard: 5 StatCards, gráfico 7 dias, painel lv/XP/eddies/streak, "próxima missão" priorizada com iniciar/completar.
+- **`2234f83` Fase 3 (operacional)**:
+  - Kanban 3 colunas com drag-and-drop (Framer Motion, hit-test por pointer) — soltar em CONCLUÍDAS concede recompensas.
+  - Focus Mode: timer, heartbeat a cada 30s persistindo `focus_seconds`, blocos 25min, pausar/concluir/abortar.
+  - Conquistas: grid com progresso ao vivo (db + cálculo local) e filtros.
+  - Álbum: cartas 3:4, bloqueadas `???`, contador.
+- **`c2fad82` Fase 4 (extras)**:
+  - Terminal NT$ (help/projects/archive/missions/create/complete/focus/stats/achievements/exit).
+  - Settings: background sólido/imagem/aleatório + opacidade aplicada no layout, som on/off + volume, handle, desconectar.
+  - Polimento: glitch/flicker nos títulos, scanlines, z-layers de backdrop.
+
+- Gate `npm run build` + `npm run lint` OK em todas as fases (warnings triviais: oxlint purity/fast-refresh).
+- **Pendências do usuário**: rodar `002_achievements_seed.sql` no SQL Editor; testar fluxo completo em `npm run dev`; soltar `click/reward/unlock/error` em `public/sfx/`; emblema/conquistas: salvá-los no histórico via Terminal. Pull request/merge para `main` quando o usuário validar as telas.
 
 ## 6. Sessão 2026-09-20 — Spec base criada
 
