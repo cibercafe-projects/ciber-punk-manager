@@ -7,6 +7,7 @@ import { useToast } from '../components/Toast'
 import { playSfx } from '../lib/audio'
 import { completeMission } from '../lib/db'
 import { missionReward } from '../lib/rewards'
+import { notifyRewards, detectLevelUp } from '../lib/feedback'
 import type { ChecklistItem, Mission, Priority } from '../types'
 
 const inputClass =
@@ -99,14 +100,11 @@ export default function Missions({ defaultProjectId }: MissionsProps) {
 
   async function handleComplete(m: Mission) {
     playSfx('click')
+    const xpBefore = profile?.xp ?? 0
     const result = await completeMission(m)
     if (result) {
-      playSfx('reward')
-      show('reward', `+${result.xp} XP · +${result.eddies} ₡ — ${m.code} concluída`)
-      for (const a of result.unlocked) {
-        playSfx('unlock')
-        show('reward', `conquista: ${a.name} (+${a.reward_xp}xp +${a.reward_eddies}₡)`)
-      }
+      notifyRewards(show, `${m.code} concluída`, result)
+      if (detectLevelUp(xpBefore, result)) playSfx('levelUp')
       void loadAll()
     }
   }

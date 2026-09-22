@@ -1,11 +1,13 @@
 ﻿import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useData } from '../stores/data'
+import { useSession } from '../stores/session'
 import { NeonPanel } from '../components/NeonPanel'
 import { NeonButton } from '../components/NeonButton'
 import { useToast } from '../components/Toast'
 import { playSfx } from '../lib/audio'
 import { completeMission } from '../lib/db'
+import { notifyRewards, detectLevelUp } from '../lib/feedback'
 import type { Mission, MissionStatus } from '../types'
 
 const columns: { status: MissionStatus; label: string; accent: 'cyan' | 'yellow' | 'green' }[] = [
@@ -42,14 +44,12 @@ export default function Kanban() {
     playSfx('click')
 
     if (target.status === 'concluida') {
+      const xpBefore = useSession.getState().profile?.xp ?? 0
       const result = await completeMission(mission)
+      void loadAll()
       if (result) {
-        playSfx('reward')
-        show('reward', `+${result.xp} XP · +${result.eddies} ₡ — ${mission.code} concluída`)
-        for (const a of result.unlocked) {
-          playSfx('unlock')
-          show('reward', `conquista: ${a.name} (+${a.reward_xp}xp +${a.reward_eddies}₡)`)
-        }
+        notifyRewards(show, `${mission.code} concluída`, result)
+        if (detectLevelUp(xpBefore, result)) playSfx('levelUp')
       }
     } else {
       await saveMission({ id: mission.id, status: target.status })

@@ -5,6 +5,7 @@ import { useSession } from '../stores/session'
 import { playSfx } from '../lib/audio'
 import { completeMission, addFocusSeconds, checkAchievements } from '../lib/db'
 import { xpProgress } from '../lib/rewards'
+import { notifyRewards, detectLevelUp } from '../lib/feedback'
 import type { Mission } from '../types'
 
 type Line = { text: string; kind: 'in' | 'out' | 'err' | 'hl' }
@@ -41,6 +42,9 @@ export default function Terminal() {
   useEffect(() => {
     void loadAll()
   }, [loadAll])
+  useEffect(() => {
+    playSfx('hacks')
+  }, [])
   useEffect(() => {
     endRef.current?.scrollIntoView({ block: 'end' })
   }, [lines])
@@ -118,15 +122,12 @@ export default function Terminal() {
           out('missão não encontrada — use "missions" para listar', 'err')
           return
         }
+        const xpBefore = profile?.xp ?? 0
         const result = await completeMission(m)
         void loadAll()
         if (result) {
-          playSfx('reward')
-          out(`${m.code} concluída: +${result.xp}xp +${result.eddies}₡`)
-          for (const a of result.unlocked) {
-            playSfx('unlock')
-            out(`★ conquista: ${a.name} (+${a.reward_xp}xp +${a.reward_eddies}₡)`, 'hl')
-          }
+          notifyRewards((k, msg) => out(msg, k === 'reward' ? 'hl' : 'out'), `${m.code} concluída`, result)
+          if (detectLevelUp(xpBefore, result)) out('▲ LEVEL UP — sons de nível', 'hl')
         } else {
           out(`${m.code} já estava concluída (idempotente)`, 'err')
         }

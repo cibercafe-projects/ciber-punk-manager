@@ -7,6 +7,8 @@ import { Progress } from '../components/ProgressBar'
 import { GlitchText } from '../components/GlitchText'
 import { playSfx } from '../lib/audio'
 import { addFocusSeconds, completeMission } from '../lib/db'
+import { notifyRewards, detectLevelUp } from '../lib/feedback'
+import { useSession } from '../stores/session'
 import type { Mission } from '../types'
 
 const HEARTBEAT_SECONDS = 30
@@ -34,7 +36,11 @@ export default function FocusMode() {
   useEffect(() => {
     if (!running) return
     const t = window.setInterval(() => {
-      setElapsed((e) => e + 1)
+      setElapsed((e) => {
+        const next = e + 1
+        if (next % 1500 === 0) playSfx('recharge')
+        return next
+      })
       syncRef.current += 1
       if (syncRef.current >= HEARTBEAT_SECONDS) {
         const mission = missions.find((m) => m.id === missionId)
@@ -73,14 +79,11 @@ export default function FocusMode() {
       await addFocusSeconds(mission, secs)
     }
     if (complete && mission) {
+      const xpBefore = useSession.getState().profile?.xp ?? 0
       const result = await completeMission(mission)
       if (result) {
-        playSfx('reward')
-        show('reward', `+${result.xp} XP · +${result.eddies} ₡ — ${mission.code} concluída`)
-        for (const a of result.unlocked) {
-          playSfx('unlock')
-          show('reward', `conquista: ${a.name} (+${a.reward_xp}xp +${a.reward_eddies}₡)`)
-        }
+        notifyRewards(show, `${mission.code} concluída`, result)
+        if (detectLevelUp(xpBefore, result)) playSfx('levelUp')
       }
     }
     setElapsed(0)
