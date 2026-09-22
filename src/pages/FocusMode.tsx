@@ -103,7 +103,7 @@ export default function FocusMode() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl tracking-[0.2em] text-neon-magenta">
+      <h1 className="text-xl tracking-[0.2em] text-neon-magenta font-cyber">
         <GlitchText>FOCUS MODE</GlitchText>
       </h1>
 

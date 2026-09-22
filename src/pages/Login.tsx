@@ -41,7 +41,7 @@ export default function Login() {
 
   return (
     <main className="relative flex min-h-svh flex-col items-center justify-center gap-8 px-4">
-      <h1 className="font-display text-3xl tracking-[0.3em] text-neon-cyan [text-shadow:0_0_14px_rgba(0,240,255,0.6)] sm:text-4xl">
+      <h1 className="text-3xl tracking-[0.3em] text-neon-cyan [text-shadow:0_0_14px_rgba(0,240,255,0.6)] sm:text-4xl font-cyber">
         <GlitchText>NEON//TASK SYSTEM</GlitchText>
       </h1>
       <NeonPanel title={mode === 'signIn' ? '// ACESSO' : '// NOVO RUNNER'} className="w-full max-w-sm">

@@ -64,7 +64,7 @@ export default function Achievements() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl tracking-[0.2em] text-neon-yellow">
+      <h1 className="text-xl tracking-[0.2em] text-neon-yellow font-cyber">
         <GlitchText>{`CONQUISTAS ${unlockedCount}/${achs.length}`}</GlitchText>
       </h1>
       <div className="flex flex-wrap gap-2">

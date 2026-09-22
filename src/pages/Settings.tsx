@@ -46,7 +46,7 @@ export default function Settings() {
 
   return (
     <div className="flex flex-col gap-4">
-      <h1 className="font-display text-xl tracking-[0.2em] text-neon-cyan">
+      <h1 className="text-xl tracking-[0.2em] text-neon-cyan font-cyber">
         <GlitchText>CONFIG</GlitchText>
       </h1>
 

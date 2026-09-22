@@ -1,5 +1,46 @@
 @import 'tailwindcss';
 
+/* Fontes locais do usuário (public/fonts/) */
+@font-face {
+  font-family: 'Cyberpunk';
+  src: url('/fonts/Cyberpunk-Regular.ttf') format('truetype');
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/Blender Pro Font/BlenderPro-Book.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/Blender Pro Font/BlenderPro-Medium.woff2') format('woff2');
+  font-weight: 500;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/Blender Pro Font/BlenderPro-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Blender Pro';
+  src: url('/fonts/Blender Pro Font/BlenderPro-Heavy.woff2') format('woff2');
+  font-weight: 900;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Kepler Std';
+  src: url('/fonts/kepler-std/KeplerStd-Regular.otf') format('opentype');
+  font-display: swap;
+}
+
 @theme {
   --color-neon-bg: #050510;
   --color-neon-surface: #0d0d1f;
@@ -13,6 +54,9 @@
 
   --font-mono: 'Share Tech Mono', ui-monospace, Consolas, monospace;
   --font-display: 'Orbitron', system-ui, sans-serif;
+  --font-cyber: 'Cyberpunk', 'Orbitron', system-ui, sans-serif;
+  --font-body: 'Blender Pro', system-ui, sans-serif;
+  --font-kepler: 'Kepler Std', serif;
 }
 
 body {

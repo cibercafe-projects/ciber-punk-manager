@@ -40,7 +40,7 @@ export function Layout({ onSignOut }: LayoutProps) {
         />
       )}
       <aside className="z-10 flex w-52 shrink-0 flex-col border-r border-neon-cyan/25 bg-neon-surface/70 px-3 py-4">
-        <a href="#" className="mb-6 px-2 font-display text-sm tracking-widest text-neon-magenta [text-shadow:0_0_10px_rgba(255,45,149,0.5)]">
+        <a href="#" className="mb-6 px-2 text-lg tracking-widest text-neon-magenta [text-shadow:0_0_10px_rgba(255,45,149,0.5)] font-cyber">
           <GlitchText>NEON//TASK</GlitchText>
         </a>
         <nav className="flex flex-1 flex-col gap-1">
