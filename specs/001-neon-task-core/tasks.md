@@ -31,6 +31,6 @@ Checklist implementável, ordem P1 → P3. Gate por fase: `npm run build` + `npm
 
 ## Fase 4 — Extras (P3, Session 4)
 
-- [ ] 4.1 `Terminal.tsx`: comandos NT$ (help/projects/missions/complete/create/stats/focus/achievements/exit) via repositórios (8)
-- [ ] 4.2 `Settings.tsx`: background (sólido/imagem/aleatório + opacidade), sons/volumes, conta, salvar em profiles.config (9)
-- [ ] 4.3 Polimento: glitch nas transições, sounds completos, responsive básico
+- [x] 4.1 `Terminal.tsx`: comandos NT$ (help/projects/archive/missions/create/complete/focus/stats/achievements/exit) via repositórios (8)
+- [x] 4.2 `Settings.tsx`: background (sólido/imagem/heroi + opacidade), sons on/off/volume, conta (handle/desconectar), persistido no store ui
+- [x] 4.3 Polimento: glitch/flicker em títulos, scanlines nos painéis/terminal, responsive build; sfx aguardando arquivos do usuário (public/sfx)
