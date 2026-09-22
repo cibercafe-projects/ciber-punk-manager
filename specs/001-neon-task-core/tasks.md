@@ -1,5 +1,17 @@
 # Tasks — 001-neon-task-core
 
+## Sessão 5 — Pré-teste manual (próxima sessão, pendências apuradas)
+
+Bugs encontrados pela investigação pré-teste (todas pendentes):
+
+- [ ] 5.1 **SQL**: criar `supabase/migrations/001_init.sql` completo a partir do data-model.md, com policies RLS **com `with check`** (INSERT/UPDATE de profiles/projects/missões senão save falha), trigger `on_auth_user_created` de perfil, defaults; usuário aplica `001` + `002` no SQL Editor
+- [ ] 5.2 **Criar missão é rejeitado no banco**: `Missions.tsx` (`handleCreate`) não gera/envia `code` (`not null`); gerar no client (`<SIGLA2>-nn` por projeto, `crypto.randomUUID()` de `id`). Terminal cria sem `user_id` (RLS rejeita) → incluir `user_id` do perfil e `id` também
+- [ ] 5.3 **Offline real**: `tryRemote` (db.ts:17) só enfileira erro com a string `SUPABASE_UNREACHABLE`, que ninguém lança; tratar falhas de fetch/rede (TypeError/'fetch failed') → enfileirar; e `useOffline.online === false` → stash direto sem tentar remoto. `loadAll` deve tolerar erro (lists vazias, sem crash)
+- [ ] 5.4 **Profile pós-signup**: `loadProfile` (.maybeSingle) null para usuário novo → adicionar `ensureProfile()` em db.ts (insert derivado do auth user); sem isso XP/eddies nunca somem
+- [ ] 5.5 Peer review: dedup loadProfile no boot (getSession + onAuthStateChange); checar Google Fonts linkadas no index.html (Orbitron/Share Tech Mono)
+- [ ] 5.6 **Teste manual do usuário**: rodar 001+002 no SQL Editor → `npm run dev`: criar conta → projeto → missão → completar (XP/toast/som) → Kanban drag → Focus → Terminal → Config
+- [ ] 5.7 Opcional: limpar sons não usados (`call-cyber`, `coffe`, `death-long`, `electronic`, `phone-call`), como fez com fontes
+
 Checklist implementável, ordem P1 → P3. Gate por fase: `npm run build` + `npm run lint` + verificação manual (quickstart.md).
 
 ## Fase 1 — Fundação (P1, Session 1)

@@ -2,6 +2,18 @@
 
 Data: 2026-09-21 · Doc: docs/RELATORIO.md
 
+## 10. Sessão 2026-09-21 (cont.) — SFX/fontes + investigação pré-teste
+
+- **SFX do usuário integrados** (`7c7fd8c`, `cf66d9f`): click (game/electronic), reward (money), unlock (level-up1), error (death); level-up = sorteio level-up2-6; recharge.ogg a cada bloco 25min do Focus; hacks.ogg ao abrir o Terminal. Feedback de recompensas centralizado em `src/lib/feedback.ts` (`notifyRewards` + `detectLevelUp`), usado por Missions/Dashboard/Kanban/Focus/Terminal.
+- **Fontes do usuário integradas via @theme** (`02fc059`): `font-cyber` (Cyberpunk-Regular) nos títulos; tokens `font-body` (Blender Pro) e `font-kepler` (Kepler Std). Podado para 6 arquivos (~260 KB) em `684c715`.
+- **Investigação pré-primeiro-teste** (subagent, read-only) achou 4 bugs/1 pendência de banco — detalhados como checklist 5.1–5.7 no final de `tasks.md`:
+  1. 001_init.sql inexistente (só data-model) + RLS sem `with check` + trigger de profile ausente;
+  2. criar missão falha: Missions não envia `code`, Terminal não envia `user_id`;
+  3. offline real: nada detecta falha de rede (tryRemote checa string nunca lançada); loadAll crasha offline;
+  4. profile não existe para signup novo → XP nunca concedido;
+  5. dedup loadProfile/Google Fonts (menor).
+- **Próxima sessão**: implementar 5.1–5.5, rodar SQL do Supabase, então teste manual completo do usuário (5.6).
+
 ## 9. Sessão 2026-09-21 — Fases 1–4 concluídas (app completo)
 
 Implementação integral do `tasks.md` em 4 commits (branch `001-neon-task-core`):
