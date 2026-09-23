@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom'
 import { useData } from '../stores/data'
 import { useSession } from '../stores/session'
 import { playSfx } from '../lib/audio'
-import { completeMission, addFocusSeconds, checkAchievements } from '../lib/db'
+import { completeMission, addFocusSeconds, checkAchievements, nextMissionCode } from '../lib/db'
 import { xpProgress } from '../lib/rewards'
 import { notifyRewards, detectLevelUp } from '../lib/feedback'
 import type { Mission } from '../types'
@@ -96,9 +96,9 @@ export default function Terminal() {
           out('nenhum projeto ativo — crie um em projetos', 'err')
           return
         }
-        const seq = missions.filter((m) => m.project_id === project.id).length + 1
-        const code = `${project.title.slice(0, 2).toUpperCase()}-M${seq}`
+        const code = nextMissionCode(project.title, missions)
         await saveMission({
+          id: crypto.randomUUID(),
           project_id: project.id,
           title: quoted,
           description: '',

@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { supabase } from '../lib/supabase'
+import { ensureProfile } from '../lib/db'
 import type { Profile } from '../types'
 
 interface SessionState {
@@ -17,14 +18,24 @@ export const useSession = create<SessionState>()((set) => ({
   loading: true,
   setUser: (user) => set({ user, loading: false }),
   setProfile: (profile) => set({ profile }),
-  loadProfile: async () => {
-    if (!supabase) return null
-    const { data } = await supabase.from('profiles').select('*').maybeSingle()
-    if (data) {
-      const p = data as Profile
-      set({ profile: p })
-      return p
+  loadProfile: () => {
+    // dedupe: boot dispara getSession + onAuthStateChange quase juntos
+    if (!inFlight) {
+      inFlight = doLoad()
     }
-    return null
+    return inFlight
   },
 }))
+
+let inFlight: Promise<Profile | null> | null = null
+
+async function doLoad() {
+  try {
+    if (!supabase) return null
+    const p = await ensureProfile()
+    if (p) useSession.setState({ profile: p })
+    return p
+  } finally {
+    inFlight = null
+  }
+}

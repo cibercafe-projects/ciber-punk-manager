@@ -5,7 +5,7 @@ import { NeonPanel } from '../components/NeonPanel'
 import { NeonButton } from '../components/NeonButton'
 import { useToast } from '../components/Toast'
 import { playSfx } from '../lib/audio'
-import { completeMission } from '../lib/db'
+import { completeMission, nextMissionCode } from '../lib/db'
 import { missionReward } from '../lib/rewards'
 import { notifyRewards, detectLevelUp } from '../lib/feedback'
 import type { ChecklistItem, Mission, Priority } from '../types'
@@ -91,6 +91,11 @@ export default function Missions({ defaultProjectId }: MissionsProps) {
       const mine = missions.filter((m) => m.project_id === form.project_id)
       payload.position = mine.reduce((acc, m) => Math.max(acc, m.position), 0) + 1
       payload.user_id = profile?.id
+      payload.id = crypto.randomUUID()
+      payload.code = nextMissionCode(
+        projects.find((p) => p.id === form.project_id)?.title ?? '',
+        missions,
+      )
     }
     await saveMission(payload)
     show('success', draft ? 'Missão atualizada' : 'Missão criada')

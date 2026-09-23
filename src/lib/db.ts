@@ -1,20 +1,32 @@
 import { supabase } from './supabase'
 import { useOffline } from '../stores/offline'
 import { missionReward, achievementProgress } from './rewards'
-import type { Achievement, Mission, Project, UserAchievement } from '../types'
+import type { Achievement, Mission, Project, Profile, UserAchievement } from '../types'
 
 type OwnTable = 'profiles' | 'projects' | 'missions'
+
+const NETWORK_FAIL = /fetch failed|failed to fetch|networkerror|network error|load failed|networkerror when attempting/i
+
+function isNetworkError(e: unknown): boolean {
+  return e instanceof TypeError || (e instanceof Error && NETWORK_FAIL.test(e.message))
+}
 
 function stash(table: OwnTable, payload: Record<string, unknown>) {
   useOffline.getState().push({ kind: { table, action: 'upsert' }, payload, at: Date.now() })
 }
 
 async function tryRemote(table: OwnTable, row: Record<string, unknown>) {
+  // offline declarado: stash direto, sem tentar remoto (FR-009)
+  if (!useOffline.getState().online) {
+    stash(table, row)
+    return false
+  }
   try {
     const { error } = await supabase.from(table).upsert(row)
     if (error) throw error
   } catch (e) {
-    if (e instanceof Error && e.message === 'SUPABASE_UNREACHABLE') {
+    if (isNetworkError(e)) {
+      useOffline.getState().setOnline(false)
       stash(table, row)
       return false
     }
@@ -45,15 +57,36 @@ export async function getProfile() {
   return data
 }
 
+// Garante linha em profiles após signup (trigger do banco pode não ter rodado).
+export async function ensureProfile(): Promise<Profile | null> {
+  const existing = await getProfile()
+  if (existing) return existing as Profile
+  const { data: userData } = await supabase.auth.getUser()
+  const uid = userData.user?.id
+  if (!uid) return null
+  const { error } = await supabase.from('profiles').upsert({ id: uid })
+  if (error) {
+    if (isNetworkError(error)) return null
+    throw error
+  }
+  const { data: created } = await supabase.from('profiles').select('*').maybeSingle()
+  return created as Profile | null
+}
+
 export async function saveProfile(profile: Partial<{ id: string; handle: string; xp: number; eddies: number; config: Record<string, unknown> }>) {
   return tryRemote('profiles', profile)
 }
 
 // ---------- projects ----------
 export async function listProjects(): Promise<Project[]> {
-  const { data, error } = await supabase.from('projects').select('*').order('position')
-  if (error) throw new Error('SUPABASE_UNREACHABLE')
-  return data as Project[]
+  // tolerante: rede fora / RLS sem linha → lista vazia (tela renderiza, sem crash)
+  try {
+    const { data } = await supabase.from('projects').select('*').order('position')
+    return (data ?? []) as Project[]
+  } catch (e) {
+    if (isNetworkError(e)) useOffline.getState().setOnline(false)
+    return []
+  }
 }
 
 export async function upsertProject(p: Partial<Project>): Promise<Project | null> {
@@ -64,10 +97,30 @@ export async function upsertProject(p: Partial<Project>): Promise<Project | null
 }
 
 // ---------- missions ----------
+// ---------- missions ----------
 export async function listMissions(): Promise<Mission[]> {
-  const { data, error } = await supabase.from('missions').select('*').order('position')
-  if (error) throw new Error('SUPABASE_UNREACHABLE')
-  return data as Mission[]
+  try {
+    const { data } = await supabase.from('missions').select('*').order('position')
+    return (data ?? []) as Mission[]
+  } catch (e) {
+    if (isNetworkError(e)) useOffline.getState().setOnline(false)
+    return []
+  }
+}
+
+// Código de missão estilo BRAKA-042: sigla 2 chars do projeto + seq dentro da sigla.
+export function nextMissionCode(projectTitle: string, missions: Mission[]): string {
+  const sigla =
+    (projectTitle.replace(/[^A-Za-z0-9]/g, '').slice(0, 2).toUpperCase() || 'NT') + '-M'
+  let seq = 1
+  const hex = crypto.randomUUID().slice(0, 4)
+  for (const m of missions) {
+    const match = /^(.+)-M(\d+)$/.exec(m.code)
+    if (match && match[1] === sigla.slice(0, -2)) seq = Math.max(seq, Number(match[2]) + 1)
+  }
+  // se ainda assim colidir (código manual), apêndice hex garante unique(user_id, code)
+  if (missions.some((m) => m.code === `${sigla}${seq}`)) return `${sigla}${seq}-${hex}`
+  return `${sigla}${seq}`
 }
 
 export async function upsertMission(m: Partial<Mission>): Promise<Mission | null> {
