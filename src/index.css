@@ -96,12 +96,12 @@ body {
 
 @utility scanlines {
   position: relative;
-  pointer-events: none;
 
   &::after {
     content: '';
     position: absolute;
     inset: 0;
+    pointer-events: none;
     background: repeating-linear-gradient(
       to bottom,
       transparent 0px,
